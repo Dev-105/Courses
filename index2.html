@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="back.png">
+  <title>DEV_105/login/Note</title>
+  <style>
+    body{
+      background: url("back.png");
+      background-size: 70%; 
+      display: flex;
+      flex-flow: column wrap;
+      align-content: center;
+    }
+    h1{
+      border: 4px solid black ;
+      background: #fcf4e1;
+      display: inline-block;
+      margin:20px auto;
+      padding: 10px 20px;
+      box-shadow: 0 0 10px 2px #fcf4e1;
+      letter-spacing: 3px ;
+      animation : moving 2s infinite ;
+    }
+    @keyframes moving{
+      0%{ letter-spacing: 3px ;}
+     50%{ letter-spacing: 5px ;}
+      100%{ letter-spacing: 3px ;}}
+      textarea{
+        background: #fcf4e1;
+        color: black;
+        font: 900 20px serif;
+        text-shadow: 0 0 10px #fcf4e1;
+        width: 90%;
+        height: 60vh;
+        outline: none;
+        border: 4px solid black;
+        padding-left: 20px ;
+        letter-spacing: 2px;
+      }
+  </style>
+</head>
+<body align="cente">
+  <h1>Ayoub</h1>
+  <textarea>
+    CREAT YOUT NOTE NOW ...
+  </textarea>
+<script>
+  let t = document.querySelector('textarea');
+  
+let h = document.querySelector('h1');
+h.textContent = localStorage.name.toUpperCase();
+if(localStorage.note){
+  t.value = localStorage.note;
+}
+
+t.onkeyup = function(){
+  localStorage.note = t.value;
+}
+
+  
+</script>
+</body>
+</html>
