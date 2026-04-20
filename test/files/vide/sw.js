@@ -1,5 +1,5 @@
 const CACHE_NAME = "app-v2";
-let path = 'Courses/test/files/vide'
+let path = '/Courses/test/files/vide'
 const urlsToCache = [
   path + "/",
   path + "/index.html",
