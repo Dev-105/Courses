@@ -365,7 +365,6 @@ async function stopQR() {
     document.getElementById("qr-code").innerHTML = "";
     let s = document.querySelector('script[src="./qr.js"]') || document.getElementById('scriptqrcode');
     s.remove();
-    console.log(s);
 
     // camera(false);
     let camerDiv = document.getElementById('camera');
@@ -380,10 +379,7 @@ function camera(active = true) {
         s.id = 'scriptqrcode';
         s.src = './qr.js'
         document.body.appendChild(s);
-        console.log(s);
-
         Brightness();
-        // QR();
         s.onload = () => {
             QR();
         };
@@ -395,8 +391,6 @@ function camera(active = true) {
 function stockCode() {
     let newCode = codeContent.split('+');
     let time = new Date();
-    console.log(time);
-
     if (parseInt(newCode[0]) != 239 || parseInt(newCode[0]) < 200) {
         codeContent = newCode[0];
     }
@@ -405,6 +399,7 @@ function stockCode() {
     }
     localStorage.codeTicket = codeContent;
     localStorage.time = time;
+    localStorage.keyCode = generateCode();
     toggleTram();
 }
 function tramTicker() {
@@ -478,6 +473,7 @@ function tramTicker() {
 
     let classTimestart = document.querySelectorAll('.start-time');
     let classTimeend = document.querySelectorAll('.end-time');
+    let classKeyCode = document.querySelectorAll('.keycode');
     let day = String(time.getDate()).padStart(2, '0');
     let month = String(time.getMonth() + 1).padStart(2, '0');
     let year = time.getFullYear();
@@ -497,6 +493,9 @@ function tramTicker() {
     });
     classTimeend.forEach(s => {
         s.textContent = lineend;
+    });
+    classKeyCode.forEach(k => {
+        k.textContent = localStorage.keyCode ;
     });
     let nbTram = document.getElementById('nbTram');
     nbTram.textContent = 'Transport number ' + localStorage.codeTicket;
@@ -530,6 +529,19 @@ function toggleTram(start = true, toggle = true) {
         ticketContainer.classList.add('hidden');
 
     }
+}
+function generateCode() {
+  const prefix = "239-";
+  const chars = "012345678901234567890123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  let randomPart = "";
+
+  for (let i = 0; i < 14; i++) { // طول الكود (بدل كيف بغيتي)
+    const randIndex = Math.floor(Math.random() * chars.length);
+    randomPart += chars[randIndex];
+  }
+
+  return prefix + randomPart;
 }
 function Console() {
     let interval = null;
