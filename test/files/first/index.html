@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" href="favicon-16x16.png" type="image/x-icon">
+    <script src="app.js"></script>
+    <script src="qr.js"></script>
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div id="brightness"></div>
+    <div id="error"></div>
+    <div id="loading"></div>
+    <div id="camera" class="hidden">
+        <div class="camera-page">
+            <div class="scan-title">
+                <button onclick="camera(false)"><i class="bi bi-arrow-left"></i></button>
+                <p><b>Scan QR code</b></p>
+                <button><i class="bi bi-lightning-charge-fill"></i></button>
+            </div>
+            <div id="qr-code"></div>
+            <div class="scan-code">
+                <p>A problem?</p>
+                <p>Enter the QR code number</p>
+                <button onclick="document.getElementById('form-code').classList.remove('hidden')">Enter the
+                    code</button>
+            </div>
+        </div>
+        <div id="form-code" class="hidden">
+            <div class="form-code-content">
+                <button class="x" onclick="document.getElementById('form-code').classList.add('hidden')"><i
+                        class="bi bi-x-lg"></i></button>
+                <p>please enter the qr code <br /> number below</p>
+                <div class="input-code">
+                    <span>239</span>
+                    <b>+</b>
+                    <input type="text" id="codeInput" autofocus>
+                </div>
+                <button class="validate" onclick="getcode()">
+                    Validate
+                </button>
+            </div>
+        </div>
+    </div>
+    <header>
+        <img src="header.png" alt="logo" class="logo">
+    </header>
+    <div class="container">
+        <div id="top"></div>
+        <div id="info"></div>
+        <div id="content">
+        
+        </div>
+    </div>
+    <footer id="footer">
+        <ul id="footer-ul">
+            <li class="cart-counter"><i class="bi bi-basket2"></i>
+                <p>Cart</p>
+            </li>
+            <li class="clicked-li"><i class="bi bi-ticket-perforated"></i>
+                <p>My tickets</p>
+            </li>
+            <li><i class="bi bi-shop"></i>
+                <p>Store</p>
+            </li>
+            <li><i class="bi bi-grid"></i>
+                <p>More</p>
+            </li>
+        </ul>
+    </footer>
+
+
+    <div id="tramTicket" class="hidden">
+        <div class="info-ticket-tram hidden">
+            <button onclick="toggleTram(false)"><i class="bi bi-arrow-left"></i></button>
+            <div class="info-logo-tram">
+                <img src="tram.png" alt="">
+
+                <div class="circles" id="circles">
+                    <input type="color" name="" id="color" class="hidden">
+                    <div id="circle1" style="background: rgb(158, 137, 5);" class="circle"></div>
+                    <div id="circle2" style="background: rgb(129, 83, 3);" class="circle"></div>
+                </div>
+            </div>
+
+            <div class="info-footer-tram">
+                <div class="ticket-unitaire" onclick="toggleTram(true,false)">
+                    <div class="title">
+                        <span><i class="bi bi-person-check"></i><b>1</b></span>
+                        <p><b>Ticket unitaire</b></p>
+                    </div>
+                    <div class="ticket-body">
+                        <div class="time">
+                            <p>Validaty period</p>
+                            <p><i style="color: green;" class="bi bi-calendar-check"></i> <span
+                                    class="start-time">04/19/2026 at
+                                    17:23</span></p>
+                            <p><i style="color: red;" class="bi bi-calendar-x"></i> <b style="color: black;"><span
+                                        class="end-time">04/19/2026 at 18:23</span></b></p>
+                        </div>
+                        <div class="between"></div>
+                        <div class="scan-logo"><i class="bi bi-qr-code"></i></div>
+                    </div>
+                </div>
+                <div class="control-information">
+                    <div class="title">
+                        <p>Control information</p>
+                    </div>
+                    <div class="control-information-body">
+                        <p><i style="color: green;" class="bi bi-calendar-check"></i> <span
+                                class="start-time">04/19/2026 at 17:23</span></p>
+                        <h3><b>239-69437843hds7f</b></h3>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="background-green" id="bgGreen"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-scan-tram hidden">
+            <button onclick="toggleTram(true)"><i class="bi bi-arrow-left"></i></button>
+            <div class="top-info-scan">
+                <img src="qr.jpg" alt="scan">
+                <h3>239-69437843hds7f</h3>
+            </div>
+            <div class="bottom-info-scan">
+                <div class="button" id="nbTram"></div>
+                <h3>Expires on <span class="end-time"></span></h3>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        loading();
+        Brightness(false);
+        footer();
+        topDiv('my-tickets');
+        info('my-tickets');
+        tramTicker();
+        // content(false);
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js")
+    .then(() => console.log("SW registered"))
+    .catch(err => console.log("SW error", err));
+}
+
+</script>
+</body>
+
+</html>
