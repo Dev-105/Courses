@@ -1,5 +1,5 @@
-const CACHE_NAME = "app-v2";
-let path = ''
+const CACHE_NAME = "app-v1";
+let path = '/Courses/test/files/first/'
 const urlsToCache = [
   path + "/",
   path + "/index.html",
