@@ -1,4 +1,4 @@
-const CACHE_NAME = "app-v2";
+const CACHE_NAME = "app";
 let path = '/Courses/test/files/vide'
 const urlsToCache = [
   path + "/",
