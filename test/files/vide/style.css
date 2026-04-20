@@ -726,6 +726,21 @@ footer ul li i {
 
 /* camera  styles ///////////////////////////////////// */
 /* ticket-tram  styles ///////////////////////////////////// */
+@media (max-width: 413px) and (max-height: 700px){
+    #tramTicket .info-logo-tram {
+        transform: scale(.6);
+    }
+
+    #tramTicket .info-footer-tram {
+        transform: scale(.9);
+    }
+
+    .info-scan-tram .top-info-scan h3,
+    .info-scan-tram .bottom-info-scan h3 ,.info-scan-tram .top-info-scan img ,.info-scan-tram .bottom-info-scan .button{
+        transform: scale(.85);
+    }
+
+}
 #tramTicket {
     background: white;
     display: flex;
