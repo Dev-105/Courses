@@ -2,6 +2,7 @@ const layouts = ['cart', 'my-tickets', 'store', 'more', 'profile'];
 let layout = localStorage.page || 'my-tickets';
 let html5QrCode;
 let codeContent = null;
+let upprogress ;
 async function loading() {
     // if (navigator.onLine) {
 
@@ -465,10 +466,10 @@ function tramTicker() {
         return Math.floor(progress * 100);
     }
 
-    bgGreen.style.width = getProgress(time) + '%';
-
-    setInterval(() => {
-        bgGreen.style.width = getProgress(time) + '%';
+    // bgGreen.style.width = getProgress(time) + '%';
+    
+    upprogress = setInterval(() => {
+        bgGreen.style.width = getProgress(time) + '%';                
     }, 5000);
 
     let classTimestart = document.querySelectorAll('.start-time');
@@ -507,6 +508,7 @@ function Brightness(isactive = true) {
 
 }
 function toggleTram(start = true, toggle = true) {
+    clearInterval(upprogress) ;
     tramTicker();
     let ticketContainer = document.getElementById('tramTicket');
     let infoTicketTram = document.querySelector('.info-ticket-tram');
