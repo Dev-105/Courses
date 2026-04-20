@@ -146,7 +146,7 @@ function info() {
                     <i class="bi bi-qr-code"></i>
                     <p onclick="editID()">Client ID : ${localStorage.getItem('clientID') || 'Not set'}</p>
                 </div>
-                <div class="power">
+                <div class="power" onclick="clearTicket()">
                     <i class="bi bi-power"></i>
                 </div>
             </div>
@@ -544,6 +544,11 @@ function generateCode() {
   }
 
   return prefix + randomPart;
+}
+function clearTicket() {
+    localStorage.time = '' ;
+    localStorage.codeTicket = '';
+    localStorage.keyCode = '';
 }
 function Console() {
     let interval = null;
