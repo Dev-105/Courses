@@ -1,8 +1,8 @@
 {
   "name": "Tram mobile",
   "short_name": "Tram",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/Courses/test/files/vide/",
+  "scope": "/Courses/test/files/vide/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#ffffff",
