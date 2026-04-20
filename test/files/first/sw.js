@@ -1,4 +1,4 @@
-const CACHE_NAME = "app-v1";
+const CACHE_NAME = "app-v";
 let path = '/Courses/test/files/first/'
 const urlsToCache = [
   path + "/",
@@ -16,7 +16,8 @@ const urlsToCache = [
   path + "/profile.png",
   path + "/qr.jpg",
   path + "/ticket.jpg",
-  path + "/tram.png"
+  path + "/tram.png",
+  "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
 ];
 
 // install → cache files
