@@ -1,4 +1,4 @@
-const CACHE_NAME = "app";
+const CACHE_NAME = "tram";
 let path = '/Courses/test/files/vide'
 const urlsToCache = [
   path + "/",
