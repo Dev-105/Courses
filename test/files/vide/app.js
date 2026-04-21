@@ -2,7 +2,7 @@ const layouts = ['cart', 'my-tickets', 'store', 'more', 'profile'];
 let layout = localStorage.page || 'my-tickets';
 let html5QrCode;
 let codeContent = null;
-let upprogress ;
+let upprogress;
 async function loading() {
     // if (navigator.onLine) {
 
@@ -66,12 +66,14 @@ function topDiv() {
         topDiv.classList.add('more-height-top');
         topDiv.innerHTML = `
         <div class="profile">
-                <img src="./profile.png" alt="profile">
+                <img src="./profile.png" id="imgbtn" class="profileImg" alt="profile">
                 <h2>
                     <p>${localStorage.getItem('client') || 'Guest'}</p><i onclick="editName()" class="bi bi-pencil-square"></i>
                 </h2>
         </div>
     `;
+        ImageSelect()
+
     }
     info();
     content(true);
@@ -159,11 +161,11 @@ function info() {
     let toggletickets = true;
     if (infoTicketsDiv) {
         const ps = infoTicketsDiv.querySelectorAll('p');
-        ps.forEach(p => {
+        ps.forEach((p,index) => {
             p.addEventListener('click', () => {
                 ps.forEach(p => p.classList.remove('clicked-info-tickets'));
                 p.classList.add('clicked-info-tickets');
-                toggletickets = !toggletickets;
+                toggletickets = index;
                 content(toggletickets);
             });
         });
@@ -387,7 +389,7 @@ function camera(active = true) {
         return
     }
     stopQR()
-    
+
 }
 function stockCode() {
     let newCode = codeContent.split('+');
@@ -467,9 +469,9 @@ function tramTicker() {
     }
 
     // bgGreen.style.width = getProgress(time) + '%';
-    
+
     upprogress = setInterval(() => {
-        bgGreen.style.width = getProgress(time) + '%';                
+        bgGreen.style.width = getProgress(time) + '%';
     }, 5000);
 
     let classTimestart = document.querySelectorAll('.start-time');
@@ -496,7 +498,7 @@ function tramTicker() {
         s.textContent = lineend;
     });
     classKeyCode.forEach(k => {
-        k.textContent = localStorage.keyCode ;
+        k.textContent = localStorage.keyCode;
     });
     let nbTram = document.getElementById('nbTram');
     nbTram.textContent = 'Transport number ' + localStorage.codeTicket;
@@ -508,7 +510,8 @@ function Brightness(isactive = true) {
 
 }
 function toggleTram(start = true, toggle = true) {
-    clearInterval(upprogress) ;
+    clearInterval(upprogress);
+    ImageSelect()
     tramTicker();
     let ticketContainer = document.getElementById('tramTicket');
     let infoTicketTram = document.querySelector('.info-ticket-tram');
@@ -533,22 +536,52 @@ function toggleTram(start = true, toggle = true) {
     }
 }
 function generateCode() {
-  const prefix = "239-";
-  const chars = "012345678901234567890123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const prefix = "239-";
+    const chars = "012345678901234567890123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  let randomPart = "";
+    let randomPart = "";
 
-  for (let i = 0; i < 14; i++) { // طول الكود (بدل كيف بغيتي)
-    const randIndex = Math.floor(Math.random() * chars.length);
-    randomPart += chars[randIndex];
-  }
+    for (let i = 0; i < 14; i++) { // طول الكود (بدل كيف بغيتي)
+        const randIndex = Math.floor(Math.random() * chars.length);
+        randomPart += chars[randIndex];
+    }
 
-  return prefix + randomPart;
+    return prefix + randomPart;
 }
 function clearTicket() {
-    localStorage.time = '' ;
+    localStorage.time = '';
     localStorage.codeTicket = '';
     localStorage.keyCode = '';
+}
+function ImageSelect() {
+    let inputFile = document.getElementById('fileImg');
+    let imgbtn = document.getElementById('imgbtn');
+    let imgs = document.querySelectorAll('.profileImg');
+    let i = 0;
+    if (localStorage.profileImg && localStorage.profileImg != '') {
+        imgs.forEach(img => {
+            img.src = localStorage.profileImg;
+        });
+    }
+    inputFile.addEventListener('change', (e) => {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+        reader.onload = (r) => {
+            localStorage.profileImg = r.target.result;
+            imgs.forEach(img => {
+                img.src = localStorage.profileImg;
+            });
+        }
+        reader.readAsDataURL(file)
+    })
+    if (imgbtn) {
+        imgbtn.addEventListener('click', () => {
+            i++;
+            if (i % 5 == 0) {
+                inputFile.click();
+            }
+        })
+    }
 }
 function Console() {
     let interval = null;
